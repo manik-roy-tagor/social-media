@@ -20,5 +20,7 @@ Route::post('/post/{id}/like', [PostController::class, 'likePost'])->name('post.
 Route::middleware(['auth'])->group(function () {
     Route::get('/chat/{user}', [ChatController::class, 'index'])->name('chat.index');
     Route::post('/chat/send', [ChatController::class, 'sendMessage'])->name('chat.send');
+    Route::get('/chat/unread-count', [ChatController::class, 'getUnreadMessageCount'])->name('chat.unread.count');
+
 });
 

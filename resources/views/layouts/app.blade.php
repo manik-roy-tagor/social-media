@@ -197,9 +197,31 @@
                         }
                     }
                 });
+
+
             });
 
+            $(document).ready(function() {
+                function fetchUnreadMessageCount() {
+                    $.ajax({
+                        url: "{{ route('chat.unread.count') }}",
+                        method: "GET",
+                        success: function(response) {
+                            if (response.unread_count > 0) {
+                                $('#messageBadge').text(response.unread_count).show();
+                            } else {
+                                $('#messageBadge').hide();
+                            }
+                        }
+                    });
+                }
 
+                // Call fetchUnreadMessageCount every 5 seconds
+                setInterval(fetchUnreadMessageCount, 5000);
+
+                // Initial call to set the badge count on page load
+                fetchUnreadMessageCount();
+            });
         });
     </script>
 

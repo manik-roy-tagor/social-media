@@ -113,8 +113,13 @@
                                                         alt="" class="rounded-circle avatar-sm">
                                                     <span style="margin-left: 10px">{{ $user->name }}</span>
                                                 </a>
-                                                <button class="btn btn-info btn-sm float-right"
-                                                    onclick="window.location.href='{{ route('chat.index', $user->id) }}'">Message</button>
+                                                <button class="btn btn-info btn-sm float-right position-relative"
+                                                    onclick="window.location.href='{{ route('chat.index', $user->id) }}'">
+                                                    Message
+                                                    <span id="messageBadge"
+                                                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                                                        style="display: none;">0</span>
+                                                </button>
 
                                             </div>
                                         @endforeach

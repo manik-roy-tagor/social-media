@@ -26,7 +26,11 @@ class ChatController extends Controller
             ->orderBy('created_at', 'asc')
             ->get();
 
-        return view('auth.chat.index', compact('user', 'messages'));
+            
+        $allUsers = User::all();
+
+            
+        return view('auth.chat.index', compact('user', 'allUsers', 'messages'));
     }
 
     public function sendMessage(Request $request)
@@ -42,8 +46,39 @@ class ChatController extends Controller
             'message' => $request->message,
         ]);
 
-        return response()->json(['message' => $message], 200);
+        $senderName = Auth::user()->name;
+
+        return response()->json(['message' => $message, 'sender_name' => $senderName]);
     }
+
+    public function fetchMessages($receiver_id)
+    {
+        $messages = Message::where(function ($query) use ($receiver_id) {
+                $query->where('sender_id', Auth::id())
+                      ->where('receiver_id', $receiver_id);
+            })
+            ->orWhere(function ($query) use ($receiver_id) {
+                $query->where('sender_id', $receiver_id)
+                      ->where('receiver_id', Auth::id());
+            })
+            ->orderBy('created_at', 'desc')
+            ->take(10) // Limit number of messages for each fetch
+            ->get();
+    
+        return response()->json(['messages' => $messages]);
+    }
+    
+
+    public function getUnreadMessageCount()
+{
+    $unreadCount = Message::where('receiver_id', Auth::id())
+                          ->where('is_read', false)
+                          ->count();
+
+    return response()->json(['unread_count' => $unreadCount]);
+}
+
+
 
     /**
      * Show the form for creating a new resource.
